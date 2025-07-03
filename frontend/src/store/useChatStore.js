@@ -65,4 +65,28 @@ export const useChatStore = create((set, get) => ({
   },
 
   setSelectedUser: (selectedUser) => set({ selectedUser }),
+
+  liveDocContent: "",
+  setLiveDocContent: (content) => set({ liveDocContent: content }),
+
+  initLiveDocSocket: () => {
+    const socket = useAuthStore.getState().socket;
+    const { selectedUser } = get();
+
+    socket.on("liveDocUpdate", (data) => {
+      if (data.from === selectedUser._id) {
+        set({ liveDocContent: data.content });
+      }
+    });
+  },
+
+  sendLiveDocUpdate: (content) => {
+    const socket = useAuthStore.getState().socket;
+    const { selectedUser } = get();
+    socket.emit("liveDocUpdate", {
+      to: selectedUser._id,
+      content,
+    });
+  },
+
 }));

@@ -1,6 +1,9 @@
 import { THEMES } from "../constants";
 import { useThemeStore } from "../store/useThemeStore";
 import { Send } from "lucide-react";
+import { useEffect } from "react";
+import { usePreferenceStore } from "../store/usePreferenceStore";
+
 
 const PREVIEW_MESSAGES = [
   { id: 1, content: "Hey! How's it going?", isSent: false },
@@ -9,6 +12,11 @@ const PREVIEW_MESSAGES = [
 
 const SettingsPage = () => {
   const { theme, setTheme } = useThemeStore();
+  const { autoTranslate, setAutoTranslate, initPreference } = usePreferenceStore();
+
+  useEffect(() => {
+    initPreference();
+  }, []);
 
   return (
     <div className="h-screen container mx-auto px-4 pt-20 max-w-5xl">
@@ -110,6 +118,20 @@ const SettingsPage = () => {
           </div>
         </div>
       </div>
+      
+    <div className="mt-6 pt-4 border-t border-base-300">
+      <h2 className="text-lg font-semibold mb-2">Translation Settings</h2>
+      <label className="label cursor-pointer justify-between">
+        <span className="label-text text-base-content">Enable Auto-Translation</span>
+        <input
+          type="checkbox"
+          className="toggle toggle-primary"
+          checked={autoTranslate}
+          onChange={() => setAutoTranslate(!autoTranslate)}
+        />
+      </label>
+    </div>
+
     </div>
   );
 };

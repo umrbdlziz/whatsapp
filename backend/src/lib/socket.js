@@ -32,6 +32,17 @@ io.on("connection", (socket) => {
     delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
+
+  socket.on("liveDocUpdate", ({ to, content }) => {
+    const receiverSocketId = userSocketMap[to];
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("liveDocUpdate", {
+        from: userId,
+        content,
+      });
+    }
+  });
+
 });
 
 export { io, app, server };
